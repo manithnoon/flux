@@ -127,6 +127,8 @@ class _ChannelBuilderState<V> extends State<_ChannelBuilder<V>> {
   
   @override
   void initState() {
+    _initState = false;
+    
     super.initState();
     
     // call addListener before onInit to hold the value of the channel.
@@ -134,11 +136,11 @@ class _ChannelBuilderState<V> extends State<_ChannelBuilder<V>> {
     
     if (widget.onInit != null) {
       final Value<V> value = widget.channel.get(widget.store);
+      debugPrint("before onInit ${this.hashCode}");
       assert(!_initState);
-      debugPrint("before onInit");
       widget.onInit(widget.store, value);
-      debugPrint("after onInit");
       assert(!_initState);
+      debugPrint("after onInit ${this.hashCode}");
     }
     
     _initState = true;
@@ -170,7 +172,7 @@ class _ChannelBuilderState<V> extends State<_ChannelBuilder<V>> {
   
   void _onValueUpdated(Value<V> value) {
     if (mounted && _initState) {
-      debugPrint("_onValueUpdated ${mounted} ${_initState}");
+      debugPrint("_onValueUpdated ${this.hashCode} ${mounted} ${_initState}");
       if (widget.onUpdated != null) {
         widget.onUpdated(widget.store, value);
       }
