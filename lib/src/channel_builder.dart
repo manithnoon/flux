@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/widgets.dart';
 
 import 'provider.dart';
@@ -123,27 +125,23 @@ class _ChannelBuilder<V> extends StatefulWidget {
 }
 
 class _ChannelBuilderState<V> extends State<_ChannelBuilder<V>> {
-  bool _initState = false;
-  
   @override
   void initState() {
-    _initState = false;
-    
     super.initState();
     
     // call addListener before onInit to hold the value of the channel.
     widget.channel.addListener(widget.store, _onValueUpdated, distinct: widget.distinct);
     
     if (widget.onInit != null) {
-      final Value<V> value = widget.channel.get(widget.store);
-      debugPrint("before onInit ${this.hashCode}");
-      assert(!_initState);
-      widget.onInit(widget.store, value);
-      assert(!_initState);
-      debugPrint("after onInit ${this.hashCode}");
+      _callOnInit();
     }
-    
-    _initState = true;
+  }
+  
+  void _callOnInit() {
+    new Future.delayed(Duration.zero, () {
+      final Value<V> value = widget.channel.get(widget.store);
+      widget.onInit(widget.store, value);
+    });
   }
   
   @override
@@ -171,8 +169,7 @@ class _ChannelBuilderState<V> extends State<_ChannelBuilder<V>> {
   }
   
   void _onValueUpdated(Value<V> value) {
-    if (mounted && _initState) {
-      debugPrint("_onValueUpdated ${this.hashCode} ${mounted} ${_initState}");
+    if (mounted) {
       if (widget.onUpdated != null) {
         widget.onUpdated(widget.store, value);
       }
