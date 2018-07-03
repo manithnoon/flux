@@ -133,15 +133,9 @@ class _ChannelBuilderState<V> extends State<_ChannelBuilder<V>> {
     widget.channel.addListener(widget.store, _onValueUpdated, distinct: widget.distinct);
     
     if (widget.onInit != null) {
-      _callOnInit();
-    }
-  }
-  
-  void _callOnInit() {
-    new Future.delayed(Duration.zero, () {
       final Value<V> value = widget.channel.get(widget.store);
       widget.onInit(widget.store, value);
-    });
+    }
   }
   
   @override
