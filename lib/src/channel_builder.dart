@@ -134,9 +134,11 @@ class _ChannelBuilderState<V> extends State<_ChannelBuilder<V>> {
     
     if (widget.onInit != null) {
       final Value<V> value = widget.channel.get(widget.store);
+      assert(!_initState);
       debugPrint("before onInit");
       widget.onInit(widget.store, value);
       debugPrint("after onInit");
+      assert(!_initState);
     }
     
     _initState = true;
@@ -168,7 +170,7 @@ class _ChannelBuilderState<V> extends State<_ChannelBuilder<V>> {
   
   void _onValueUpdated(Value<V> value) {
     if (mounted && _initState) {
-      debugPrint("_onValueUpdated");
+      debugPrint("_onValueUpdated ${mounted} ${_initState}");
       if (widget.onUpdated != null) {
         widget.onUpdated(widget.store, value);
       }
