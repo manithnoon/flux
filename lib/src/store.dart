@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:flutter/widgets.dart';
+import 'package:flutter/widgets.dart' hide Action;
 
 import 'action.dart';
 import 'channel_builder.dart';
